@@ -1,0 +1,222 @@
+{\rtf1\ansi\deff0\nouicompat{\fonttbl{\f0\fnil\fcharset0 Calibri;}{\f1\fnil Consolas;}{\f2\fnil\fcharset0 Consolas;}{\f3\fnil\fcharset1 Cambria Math;}}
+{\colortbl ;\red0\green128\blue0;\red0\green0\blue255;\red128\green128\blue128;\red255\green0\blue255;\red255\green0\blue0;}
+{\*\generator Riched20 10.0.19041}{\*\mmathPr\mmathFont3\mwrapIndent1440 }\viewkind4\uc1 
+\pard\sa200\sl276\slmult1\qc\b\f0\fs36\lang9 Assignment 5\par
+
+\pard\sa200\sl276\slmult1\b0\fs24\par
+\cf1\f1\fs19 -- Using database\cf0\f0\fs24\par
+\cf2\f1\fs19 Use\cf0  Spring_2023_BaseBall\cf3 ;\cf0\par
+\par
+\cf1 -- Q1 \par
+-- Write a query that lists the playerid, birthcity, birthstate, Hits (H), At Bats (AB), salary and batting average for all players born in New Jersey sorted by first name and year in ascending order using the PEOPLE, SALARIES and BATTING tables. The joins must be made using the WHERE clause. Make sure values are properly formatted.\cf0\par
+\cf1 -- Note: your query should return 362 rows using the where statement to resolve divide by zero error or 453 rows using nullif. Also note that the order of the tables will give you different numbers of result rows.\cf0\par
+\par
+\cf2 select\cf0  P\cf3 .\cf0 playerId\cf3 ,\cf0  P\cf3 .\cf0 birthcity\cf3 ,\cf0  P\cf3 .\cf0 birthstate\cf3 ,\cf0  S\cf3 .\cf0 teamID\cf3 ,\cf0  B\cf3 .\cf0 h\cf3 ,\cf0  B\cf3 .\cf0 AB\cf3 ,\cf0  B\cf3 .\cf0 yearID\cf3 ,\cf0  \cf4 FORMAT\cf3 (\cf0 salary\cf3 ,\cf0  \cf5 'C'\cf3 ,\cf0  \cf5 'en-us'\cf3 )\cf0  \cf2 AS\cf0  salary \cf3 ,\cf0  \cf4 CONVERT\cf3 (\cf2 DECIMAL\cf3 (\cf0 5\cf3 ,\cf0 4\cf3 ),\cf2  \cf3 (\cf0 H\cf3 *\cf0 1.0\cf3 /\cf0 AB\cf3 ))\cf0  \cf2 AS\cf0  [Batting Average] \par
+\cf2 from\cf0  People P\cf3 ,\cf0  Salaries S\cf3 ,\cf0  Batting B\par
+\cf2 where\cf0  P\cf3 .\cf0 playerID \cf3 =\cf0  S\cf3 .\cf0 playerID\par
+\tab\cf3 AND\cf0  B\cf3 .\cf0 AB \cf3 >\cf0  0\par
+\tab\cf3 AND\cf0  P\cf3 .\cf0 playerID \cf3 =\cf0  B\cf3 .\cf0 playerID\par
+\tab\cf3 AND\cf0  S\cf3 .\cf0 salary \cf3 >\cf0  0\par
+\tab\cf3 AND\cf0  S\cf3 .\cf0 yearID \cf3 =\cf0  B\cf3 .\cf0 yearID\par
+\tab\cf3 AND\cf0  S\cf3 .\cf0 teamID \cf3 =\cf0  B\cf3 .\cf0 teamID\par
+\tab\cf3 AND\cf0  P\cf3 .\cf0 birthState \cf3 =\cf0  \cf5 'NJ'\cf0\par
+\cf2 ORDER\cf0  \cf2 BY\cf0  P\cf3 .\cf0 nameFirst\cf3 ,\cf0  S\cf3 .\cf0 yearID\par
+\par
+\cf1 --Q2\cf0\par
+\cf1 -- Write the same query as #2 but use LEFT JOINs using the PEOPLE table first. This time, sort by salary in descending order and then by first name and year in ascending order.    \cf0\par
+\cf2 select\cf0  P\cf3 .\cf0 playerId\cf3 ,\cf0  P\cf3 .\cf0 birthcity\cf3 ,\cf0  P\cf3 .\cf0 birthstate\cf3 ,\cf0  P\cf3 .\cf0 birthYear\cf3 ,\cf0  B\cf3 .\cf0 yearID\cf3 ,\cf0  \par
+\cf4 FORMAT\cf3 (\cf0 salary\cf3 ,\cf0  \cf5 'C'\cf3 ,\cf0  \cf5 'en-us'\cf3 )\cf0  \cf2 AS\cf0  salary \cf3 ,\cf0  \cf4 CONVERT\cf3 (\cf2 DECIMAL\cf3 (\cf0 5\cf3 ,\cf0 4\cf3 ),\cf2  \cf3 (\cf0 H\cf3 *\cf0 1.0\cf3 /\cf0 AB\cf3 ))\cf0  \cf2 AS\cf0  [Batting Average]\par
+\cf2 from\cf0  People P\par
+\cf3 left\cf0  \cf3 JOIN\cf0  Salaries S \cf2 ON\cf0  P\cf3 .\cf0 playerID \cf3 =\cf0  S\cf3 .\cf0 playerID\par
+\cf3 left\cf0  \cf3 JOIN\cf0  Batting B \cf2 ON\cf0   P\cf3 .\cf0 playerID \cf3 =\cf0  B\cf3 .\cf0 playerID \cf3 AND\cf0  S\cf3 .\cf0 yearID \cf3 =\cf0  B\cf3 .\cf0 yearID \cf3 AND\cf0  S\cf3 .\cf0 teamID \cf3 =\cf0  B\cf3 .\cf0 teamID\par
+\cf2 WHERE\cf0  P\cf3 .\cf0 birthState \cf3 =\cf0  \cf5 'NJ'\cf0  \cf3 AND\cf0  B\cf3 .\cf0 AB \cf3 >\cf0  0 \cf3 AND\cf0  S\cf3 .\cf0 salary \cf3 >\cf0  0\par
+\cf2 ORDER\cf0  \cf2 BY\cf0  S\cf3 .\cf0 salary \cf2 desc\cf3 ,\cf0  P\cf3 .\cf0 nameFirst\cf3 ,\cf0  S\cf3 .\cf0 yearID\par
+\par
+\cf1 -- Q3\cf0\par
+\cf1 -- You get into a debate regarding the level of school that professional sports players attend. Your stance is that there are plenty of baseball players who attended Ivy League schools and were good batters in addition to being scholars. Write a query to support your argument using the CollegePlaying and HallofFame tables. You must use an IN clause in the WHERE clause to identify the Ivy League schools.\cf0\f2\lang1033  \cf1\f1\lang9 Only include players that were indicted into the HallofFame (Inducted = Y). Your answer should return 2 rows and contain the columns below.  Note the yearid is the year for the batting average not the year in College Playing. The colleges in the Ivy League are Brown, Columbia, Cornell, Dartmouth, Harvard, Princeton, UPenn, and Yale. You will need to use the HallofFame and COLLEGEPLAYING tables.\cf0\par
+\par
+\cf2 Select\cf0  \cf2 DISTINCT\cf0  playerID\cf3 ,\cf0  schoolID \cf2 from\cf0  CollegePlaying\par
+\cf2 where\cf0   playerID \cf3 in\cf2  \cf3 (\cf2 select\cf0  playerID \cf2 from\cf0  HallOfFame \cf2 where\cf0  inducted \cf3 =\cf0  \cf5 'Y'\cf3 )\cf0\par
+\tab\cf3 AND\cf0  schoolID \cf3 IN\cf2  \cf3 (\cf5 'brown'\cf3 ,\cf0  \cf5 'columbia'\cf3 ,\cf0  \cf5 'cornell'\cf3 ,\cf0  \cf5 'dartmouth'\cf3 ,\cf0   \cf5 'princeton'\cf3 ,\cf0   \cf5 'UPenn'\cf3 ,\cf0  \cf5 'yale'\cf3 )\cf0\par
+\par
+\cf1 -- Q4\cf0\par
+\cf1 --You are now interested in the longevity of players careers. Using the BATTING table and the appropriate SET clause from slide 45 of the Chapter 3 PowerPoint presentation, find the players that played for the same teams in 2016 and 2021. Your query only needs to return the playerid and teamids. The query should return 138 rows.\cf0\par
+\par
+\cf3 (\cf2 select\cf0  playerID\cf3 ,\cf0  teamID \cf2 from\cf0  BATTING \cf2 where\cf0  yearID\cf3 =\cf0 2016\cf3 )\cf0\par
+\cf2 intersect\cf0\par
+\cf3 (\cf2 select\cf0  playerID\cf3 ,\cf0  teamID \cf2 from\cf0  BATTING \cf2 where\cf0  yearID\cf3 =\cf0 2021\cf3 )\cf0\par
+\par
+\cf1 -- Q5\cf0\par
+\cf1 -- Using the BATTING table and the appropriate SET clause from slide 45 of the Chapter 3 PowerPoint presentation, find the players that played for the different teams in 2016 and 2021 Your query only needs to return the playerids and the 2016 teamid. The query should return 1,344 rows.\cf0\par
+\par
+\cf3 (\cf2 select\cf0  playerID\cf3 ,\cf0  teamID \cf2 from\cf0  BATTING \cf2 where\cf0  yearID\cf3 =\cf0 2016\cf3 )\cf0\par
+\cf2 except\cf0\par
+\cf3 (\cf2 select\cf0  playerID\cf3 ,\cf0  teamID \cf2 from\cf0  BATTING \cf2 where\cf0  yearID\cf3 =\cf0 2021\cf3 )\cf0\par
+\par
+\cf1 -- Q6\cf0\par
+\cf1 -- Using the Salaries table, calculate the average and total salary for each player. Make sure the amounts are properly formatted and sorted by the total salary in descending order. Your query should return 6,246 rows.\cf0\par
+\par
+\cf2 select\cf0  playerid\cf3 ,\cf0  \cf4 FORMAT\cf3 (\cf4 avg\cf3 (\cf0 salary\cf3 ),\cf0  \cf5 'C'\cf3 ,\cf0  \cf5 'en-us'\cf3 )\cf0  \cf2 as\cf0  Average_salary\cf3 ,\cf0  \par
+\cf4 FORMAT\cf3 (\cf4 sum\cf3 (\cf0 salary\cf3 ),\cf0  \cf5 'C'\cf3 ,\cf0  \cf5 'en-us'\cf3 )\cf0  \cf2 as\cf0  Total_salary \cf2 from\cf0  Salaries\par
+\cf2 GROUP\cf0  \cf2 BY\cf0  playerID\par
+\cf2 ORDER\cf0  \cf2 BY\cf0  \cf4 sum\cf3 (\cf0 salary\cf3 )\cf0  \cf2 DESC\cf0\par
+\par
+\cf1 -- Q7\cf0\par
+\cf1 -- Using the Batting  and People tables and a HAVING clause, write a query that lists the playerid, the players full name, the number of home runs (HR) for all players having more than 400 home runs and the number of years they played. The query should return 57 rows.\cf0\par
+\par
+\cf2 SELECT\cf0  X\cf3 .\cf0 playerId\cf3 ,\cf0  [Full Name]\cf3 ,\cf0  [Total Home Runs]\cf3 ,\cf0  [Years Played]\par
+\cf2 FROM \cf3 (\cf2 SELECT\cf0  playerID\cf3 ,\cf0  \cf4 CONCAT\cf3 (\cf0 nameFirst\cf3 ,\cf0  \cf5 ' ( '\cf3 ,\cf0  nameGiven\cf3 ,\cf5 ' ) '\cf3 ,\cf0  nameLast\cf3 )\cf0  \cf2 AS\cf0  [Full Name] \cf2 FROM\cf0  People\cf3 )\cf0  X\cf3 ,\cf0\par
+\cf2\tab  \cf3 (\cf2 SELECT\cf0  P\cf3 .\cf0 playerID\cf3 ,\cf0  \cf4 SUM\cf3 (\cf0 B\cf3 .\cf0 HR\cf3 )\cf0  \cf2 as\cf0  [Total Home Runs]\cf3 ,\cf0  \cf4 COUNT\cf3 (\cf0 yearID\cf3 )\cf0  \cf2 AS\cf0  [Years Played] \cf2 FROM\cf0  People P\par
+\tab\tab\cf3 JOIN\cf0  Batting B \cf2 ON\cf0  P\cf3 .\cf0 playerID \cf3 =\cf0  B\cf3 .\cf0 playerID  \cf2 GROUP\cf0  \cf2 BY\cf0  P\cf3 .\cf0 playerID  \cf2 HAVING\cf0  \cf4 SUM\cf3 (\cf0 HR\cf3 )\cf0  \cf3 >\cf0  400\cf3 )\cf0  Y\par
+\tab\cf2 WHERE\cf0  X\cf3 .\cf0 playerID \cf3 =\cf0  Y\cf3 .\cf0 playerID\par
+\tab\cf2 ORDER\cf0  \cf2 BY\cf0  [Total Home Runs] \cf2 DESC\cf0\par
+\par
+\cf1 -- Q8 \cf0\par
+\cf1 -- Hitting 500 home runs is a hallmark achievement in baseball. You want to project if the players with under 500 but more than 400 home runs will have over 500 home runs, assuming they will play for a total of 22 years like the top players in question 7. To create your estimates, divide the total number of home runs by the years played and multiply by 22. Use a BETWEEN clause in the HAVING statement to identify players having between 400 and 499 home runs.  Only include playeris you estimate will reach the 500 HR goal. This will return 18 rows\cf0\par
+\par
+\cf2 select\cf0  X\cf3 .\cf0 playerID\cf3 ,\cf0  p\cf3 .\cf0 namegiven \cf3 +\cf0  \cf5 ' ('\cf0  \cf3 +\cf0  p\cf3 .\cf0 namefirst \cf3 +\cf0  \cf5 ') '\cf0  \cf3 +\cf0  p\cf3 .\cf0 namelast \cf2 AS\cf0  [Full Name]\cf3 ,\cf0\par
+ X\cf3 .\cf0 Total_HR\cf3 ,\cf0  X\cf3 .\cf0 Years_played\cf3 ,\cf0  X\cf3 .\cf0 Projected_HR\par
+\par
+\cf2 from \cf3 (\cf0\par
+\cf2 select\cf0  playerid\cf3 ,\cf2   \cf3 (\cf4 sum\cf3 (\cf0 HR\cf3 )/\cf4 count\cf3 (\cf0 yearid\cf3 ))*\cf0  22 \cf2 as\cf0  Projected_HR\cf3 ,\cf0  \cf4 sum\cf3 (\cf0 HR\cf3 )\cf0  \cf2 as\cf0  Total_hr\cf3 ,\cf0  \cf4 count\cf3 (\cf0 yearid\cf3 )\cf0  \cf2 as\cf0  Years_played \cf2 from\cf0  Batting\par
+\cf2 group\cf0  \cf2 by\cf0  playerid\par
+\cf2 having\cf0  \cf4 sum\cf3 (\cf0 hr\cf3 )\cf0  \cf3 between\cf0  400 \cf3 and\cf0  500\par
+\cf3 and\cf2  \cf3 (\cf4 sum\cf3 (\cf0 HR\cf3 )/\cf4 count\cf3 (\cf0 yearid\cf3 ))*\cf0  22 \cf3 >\cf0  500\cf3 )\cf0  X\par
+\cf3 join\cf0  People P \cf2 on\cf0  p\cf3 .\cf0 playerID \cf3 =\cf0  X\cf3 .\cf0 playerID\par
+\cf2 order\cf0  \cf2 by\cf0  X\cf3 .\cf0 Total_hr \cf2 desc\par
+\cf0\par
+\par
+\cf1 -- Q9 \cf0\par
+\cf1 -- Using a subquery along with an IN clause in the WHERE statement, write a query that identifies all the playerids, the players full name and the team names who in 2021 that were playing on teams that existed prior to 1910. You should use the appearances table to identify the players years and the TEAMS table to identify the team name. Sort your results by players last name. Your query should return 613 rows.\cf0\par
+\cf2 SELECT\cf0  A\cf3 .\cf0 playerID\cf3 ,\cf0  \cf4 CONCAT\cf3 (\cf0 nameFirst\cf3 ,\cf0  \cf5 ' ( '\cf3 ,\cf0 nameGiven \cf3 ,\cf0  \cf5 ' ) '\cf3 ,\cf0  nameLast\cf3 )\cf0  \cf2 AS\cf0  [Full Name]\cf3 ,\cf0  teamID \par
+\cf2 FROM\cf0  APPEARANCES A\par
+\cf3 JOIN\cf0  People P \cf2 ON\cf0  A\cf3 .\cf0 playerID \cf3 =\cf0  P\cf3 .\cf0 playerID\par
+\cf2 WHERE\cf0  yearID \cf3 =\cf0  2021 \par
+\cf3 AND\cf0  teamID \cf3 IN\cf2  \cf3 (\cf2 SELECT\cf0  teamID \cf2 FROM\cf0  TEAMS \cf2 WHERE\cf0  yearID \cf3 <\cf0  1910\cf3 )\cf0\par
+\cf2 ORDER\cf0  \cf2 BY\cf0  nameLast\cf3 ;\cf0\par
+\par
+\cf1 -- Q10 \cf0\par
+\cf1 -- Using the Salaries table, find the players full name, average salary and the last year they played  for each team they played for during their career. Also find the difference between the players salary and the average team salary. You must use subqueries in the FROM statement to get the team and player average salaries and calculate the difference in the SELECT statement.\cf0\f2\lang1033  \cf1\f1\lang9 Sort your answer by the last year in descending order , the difference in descending order and the playerid in ascending order. The query should return 12,928 rows\cf0\par
+\par
+\cf2 SELECT\cf0  Person\cf3 .\cf0 playerID\cf3 ,\cf0  [Full Name]\cf3 ,\cf0  t\cf3 .\cf0 teamID\cf3 ,\cf0  [Last Year]\cf3 ,\cf0  \cf4 format\cf3 (\cf0 [Player Average]\cf3 ,\cf0  \cf5 'c'\cf3 )\cf0  \cf2 as\cf0  [Player Average]\cf3 ,\cf0  \par
+\tab  \cf4 format\cf3 (\cf0 [Team Average]\cf3 ,\cf0  \cf5 'C'\cf3 )\cf0  \cf2 as\cf0  [Team Average]\cf3 ,\cf0  \cf4 format\cf3 (\cf0 [Player Average]\cf3 -\cf0 [Team Average]\cf3 ,\cf0  \cf5 'C'\cf3 )\cf0  \cf2 as\cf0  [Difference]\par
+\cf2 FROM \cf3 (\cf2 SELECT\cf0  teamID\cf3 ,\cf0  \cf4 avg\cf3 (\cf0 salary\cf3 )\cf0  \cf2 as\cf0  [Team Average] \cf2 from\cf0  Salaries \cf2 group\cf0  \cf2 by\cf0  teamID\cf3 )\cf0  t\cf3 ,\cf0\par
+\cf2\tab  \cf3 (\cf2 SELECT\cf0  teamID\cf3 ,\cf0  playerID\cf3 ,\cf0  \cf4 avg\cf3 (\cf0 salary\cf3 )\cf0  \cf2 as\cf0  [Player Average]\cf3 ,\cf0  \cf4 max\cf3 (\cf0 yearId\cf3 )\cf0  \cf2 AS\cf0  [Last Year]\par
+\tab\tab\cf2 from\cf0  Salaries \cf2 group\cf0  \cf2 by\cf0  teamID\cf3 ,\cf0  playerID\cf3 )\cf0  p\cf3 ,\cf0\par
+\cf2\tab  \cf3 (\cf2 SELECT\cf0   playerID\cf3 ,\cf0  namegiven \cf3 +\cf0  \cf5 ' ('\cf0  \cf3 +\cf0  namefirst \cf3 +\cf0  \cf5 ') '\cf0  \cf3 +\cf0  namelast \cf2 AS\cf0  [Full Name]\par
+\tab\tab  \cf2 from\cf0  People \cf2 group\cf0  \cf2 by\cf0  playerID\cf3 ,\cf0  namegiven \cf3 +\cf0  \cf5 ' ('\cf0  \cf3 +\cf0  namefirst \cf3 +\cf0  \cf5 ') '\cf0  \cf3 +\cf0  namelast \cf3 )\cf0  Person\par
+\cf2 WHERE\cf0  t\cf3 .\cf0 teamID \cf3 =\cf0  p\cf3 .\cf0 teamID\par
+\tab   \cf3 AND\cf0  Person\cf3 .\cf0 playerID \cf3 =\cf0  p\cf3 .\cf0 playerID\par
+\cf2 ORDER\cf0  \cf2 BY\cf0  [Last Year] \cf2 DESC\cf3 ,\cf0  [Difference] \cf2 DESC\cf0  \cf3 ,\cf0 playerID\par
+\par
+\lang1033\par
+\cf1 -- Q11\cf0\par
+\cf1 --Rewrite the query in #11 using a WITH statement for the subqueries instead of having the subqueries in the from statement. The answer will be the same. Please make sure you put a GO statement before and after this problem. 5 points will be deducted if the GO statements are missing and I have to add them manually\cf0\par
+\par
+\cf2 With\cf0  t \cf2 as\cf0\par
+\cf2\tab\cf3 (\cf2 SELECT\cf0  teamID\cf3 ,\cf0  \cf4 avg\cf3 (\cf0 salary\cf3 )\cf0  \cf2 as\cf0  [Team Average] \cf2 from\cf0  Salaries \cf2 group\cf0  \cf2 by\cf0  teamID\cf3 ),\cf0\par
+\tab p \cf2 as\cf0\par
+\cf2\tab\cf3 (\cf2 SELECT\cf0  teamID\cf3 ,\cf0  playerID\cf3 ,\cf0  \cf4 avg\cf3 (\cf0 salary\cf3 )\cf0  \cf2 as\cf0  [Player Average]\cf3 ,\cf0  \cf4 max\cf3 (\cf0 yearId\cf3 )\cf0  \cf2 AS\cf0  [Last Year]\par
+\tab\tab\cf2 from\cf0  Salaries \cf2 group\cf0  \cf2 by\cf0  teamID\cf3 ,\cf0  playerID\cf3 ),\cf0\par
+\tab person \cf2 as\cf0\par
+\cf2\tab\cf3 (\cf2 SELECT\cf0   playerID\cf3 ,\cf0  namegiven \cf3 +\cf0  \cf5 ' ('\cf0  \cf3 +\cf0  namefirst \cf3 +\cf0  \cf5 ') '\cf0  \cf3 +\cf0  namelast \cf2 AS\cf0  [Full Name]\par
+\tab\tab  \cf2 from\cf0  People \cf2 group\cf0  \cf2 by\cf0  playerID\cf3 ,\cf0  namegiven \cf3 +\cf0  \cf5 ' ('\cf0  \cf3 +\cf0  namefirst \cf3 +\cf0  \cf5 ') '\cf0  \cf3 +\cf0  namelast \cf3 )\cf0\par
+\cf2 SELECT\cf0  person\cf3 .\cf0 playerID\cf3 ,\cf0  [Full Name]\cf3 ,\cf0  t\cf3 .\cf0 teamID\cf3 ,\cf0  [Last Year]\cf3 ,\cf0  \cf4 format\cf3 (\cf0 [Player Average]\cf3 ,\cf0  \cf5 'c'\cf3 )\cf0  \cf2 as\cf0  [Player Average]\cf3 ,\cf0  \par
+\tab  \cf4 format\cf3 (\cf0 [Team Average]\cf3 ,\cf0  \cf5 'C'\cf3 )\cf0  \cf2 as\cf0  [Team Average] \cf3 ,\cf0  \cf4 format\cf3 (\cf0 [Player Average]\cf3 -\cf0 [Team Average]\cf3 ,\cf0  \cf5 'C'\cf3 )\cf0  \cf2 as\cf0  [Difference]\par
+\cf2 FROM\cf0  t\cf3 ,\cf0  p\cf3 ,\cf0  person\par
+\cf2 WHERE\cf0  t\cf3 .\cf0 teamID \cf3 =\cf0  p\cf3 .\cf0 teamID\par
+\tab   \cf3 AND\cf0  Person\cf3 .\cf0 playerID \cf3 =\cf0  p\cf3 .\cf0 playerID\par
+\cf2 ORDER\cf0  \cf2 BY\cf0  [Last Year] \cf2 DESC\cf3 ,\cf0  [Difference] \cf2 DESC\cf0  \cf3 ,\cf0 playerID\par
+\par
+\cf1 -- Q13 \cf0\par
+\cf1 -- The player\rquote s union has negotiated that players will start to have a 401K retirement plan. Using the [401K Contributions] column in the Salaries table,  populate this column for each row by updating it to contain 6% of the salary in the row. You must use an UPDATE query to fill in the amount. This query updates 32,862 rows. Use the column names given, do not create your own columns. Include a select query with the results sorted by playerid as part of your answer that results the rows shown below.\cf0\par
+\par
+\cf2 ALTER\cf0  \cf2 TABLE\cf0  Salaries\par
+\cf2 ADD\cf0  [401K Contributions] [int]\par
+\cf2 GO\cf0\par
+\cf4 UPDATE\cf0  Salaries \cf2 SET\cf0  [401K Contributions] \cf3 =\cf0  salary \cf3 *\cf0  0.06 \par
+\cf2 Select\cf0  playerid\cf3 ,\cf0  salary\cf3 ,\cf0  [401k Contributions] \cf2 from\cf0  Salaries\par
+\cf2 ORDER\cf0  \cf2 BY\cf0  playerID\par
+\lang9\par
+\cf1 -- Q14\cf0\par
+\cf1 -- Contract negotiations have proceeded and now the team owner will make a seperate contribution to each players 401K each year. If the player\rquote s salary is under $1 million, the team will contribute another 5%. If the salary is over $1 million, the team will contribute 2.5%. You now need to write an UPDATE query for the [401K Team Contributions] column in the Salaries table to populate the team contribution with the correct amount. You must use a CASE clause in the UPDATE query to handle the different amounts contributed. This query updates 32,862 rows.\cf0\par
+\par
+\cf2 ALTER\cf0  \cf2 TABLE\cf0  Salaries\par
+\cf2 ADD\cf0   [401K Team]  [int]\par
+\cf2 GO\cf0\par
+\cf4 UPDATE\cf0  Salaries\par
+\cf2 SET\cf0  [401K Team] \cf3 =\cf2  \cf3 (\cf0\par
+\cf2 CASE\cf0  \par
+\cf2 WHEN \cf3 (\cf0 salary \cf3 <\cf0 1000000\cf3 )\cf0  \cf2 THEN\cf0  salary\cf3 *\cf0 0.05\par
+\cf2 WHEN \cf3 (\cf0 salary \cf3 >=\cf0  1000000\cf3 )\cf0  \cf2 THEN\cf0  salary\cf3 *\cf0 0.025\par
+\cf2 ELSE\cf0  \cf3 NULL\cf0\par
+\cf2 END\cf3 )\cf0\par
+\cf2 Select\cf0  playerid\cf3 ,\cf0  salary\cf3 ,\cf0  [401k Contributions]\cf3 ,\cf0  [401K Team] \cf2 from\cf0  Salaries\par
+\cf2 ORDER\cf0  \cf2 BY\cf0  playerID\par
+ \par
+\par
+\cf1 -- Q15\cf0\par
+\cf1 -- You have now been asked to populate the columns to the PEOPLE table that contain the total number of HRs hit ( Total_HR column) by the player and the highest Batting Average the player had during any year they played ( High_BA column). Write a single query that correctly populates these columns. You will need to use a subquery to make is a single query. This query updates 17,593 rows if you use AB > 0 in the where statement. It updates 19,898 rows in nullif is used for batting average. After your update query, write a query that shows the playerid, Total HRs and Highest Batting Average for each player. The Batting Average must be formatted to only show 4 decimal places. Sort the results by playerid. The update query will update 17841 rows and the select query will return 20,370 rows.\cf0\par
+\par
+\cf2 ALTER\cf0  \cf2 TABLE\cf0  People\par
+\cf2 ADD\cf0  Total_HR \cf2 int\cf3 ,\cf0\par
+    Career_BA \cf2 decimal\cf3 (\cf0 6\cf3 ,\cf0 4\cf3 )\cf0\par
+\cf2 GO\cf0\par
+\cf2 BEGIN\cf0  \cf2 TRAN\cf0\par
+\cf4 UPDATE\cf0  People\par
+\tab\cf2 SET\cf0  Total_HR \cf3 =\cf2   \cf3 (\cf2 SELECT\cf0  \cf4 sum\cf3 (\cf0 HR\cf3 )\cf0  \cf2 FROM\cf0  Batting B \cf2 WHERE\cf0  B\cf3 .\cf0 playerID \cf3 =\cf0  P\cf3 .\cf0 playerID \cf2 GROUP\cf0  \cf2 BY\cf0  playerID\cf3 )\cf0\par
+\tab\tab  \cf2 FROM\cf0  Batting B\cf3 ,\cf0 People P \par
+\tab\tab  \cf2 WHERE\cf0  P\cf3 .\cf0 playerID \cf3 =\cf0  B\cf3 .\cf0 playerID\par
+\cf2 COMMIT\cf0\par
+\cf2 BEGIN\cf0  \cf2 TRAN\cf0\par
+\cf4 UPDATE\cf0  People\par
+\tab\cf2 SET\cf0  Career_BA \cf3 =\cf2   \cf3 (\cf2 select\cf0  \cf4 max\cf3 (\cf4 CONVERT\cf3 (\cf2 DECIMAL\cf3 (\cf0 5\cf3 ,\cf0 4\cf3 ),\cf2  \cf3 (\cf0 B\cf3 .\cf0 H\cf3 *\cf0 1.0\cf3 /\cf0 B\cf3 .\cf0 AB\cf3 )))\cf0  \cf2 AS\cf0  [Batting Average] \cf2 FROM\cf0  Batting B \cf2 WHERE\cf0  B\cf3 .\cf0 playerID \cf3 =\cf0  P\cf3 .\cf0 playerID \cf3 and\cf0  B\cf3 .\cf0 AB\cf3 >\cf0 0 \cf2 GROUP\cf0  \cf2 BY\cf0  playerID\cf3 ,\cf0  yearID\cf3 )\cf0\par
+\tab\tab\cf2 FROM\cf0  Batting B\cf3 ,\cf0 People P \par
+\tab\tab\cf2 WHERE\cf0  P\cf3 .\cf0 playerID \cf3 =\cf0  B\cf3 .\cf0 playerID \cf3 AND\cf0\par
+\tab\tab B\cf3 .\cf0 AB \cf3 >\cf0  0\par
+\cf2 COMMIT\cf0  \cf2 TRAN\par
+\cf0\par
+\cf2 SELECT\cf0  playerID\cf3 ,\cf0  Total_HR\cf3 ,\cf0  Career_BA \cf2 FROM\cf0  People\par
+\cf2 ORDER\cf0  \cf2 BY\cf0  playerID\par
+\par
+\cf1 -- Q16\cf0\par
+\cf1 --  You have also been asked to populate a column in the PEOPLE table ( Total_401K column) that contains the total value of the 401K for each player in the Salaries table.  Write the SQL that correctly populates the column. This query updates 5,981 rows.  Also, include a query that shows the playerid, the player full name and their 401K total from the people table. Only show players that have contributed to their 401Ks. Sort the results by playerid. . This query returns 5,981 rows. \cf0\par
+\par
+\cf2 BEGIN\cf0\par
+    \cf2 ALTER\cf0  \cf2 TABLE\cf0  People\par
+    \cf2 ADD\cf0  [401K Total] [int]\tab\par
+\cf2 END\cf0\par
+\cf2 GO\cf0\par
+\cf2 BEGIN\cf0  \cf2 TRAN\cf0\par
+\cf4 UPDATE\cf0  People\par
+\tab\cf2 SET\cf0  [401K Total] \cf3 =\cf2   \cf3 (\cf2 SELECT\cf0  \cf4 sum\cf3 (\cf0 [401k Contributions]\cf3 )+\cf4 sum\cf3 (\cf0 [401K Team]\cf3 )\cf0  \cf2 FROM\cf0  Salaries S \par
+\tab\tab\cf2 WHERE\cf0  S\cf3 .\cf0 playerID \cf3 =\cf0  P\cf3 .\cf0 playerID \cf2 GROUP\cf0  \cf2 BY\cf0  playerID\cf3 )\cf0\par
+\tab\tab  \cf2 FROM\cf0  Salaries S\cf3 ,\cf0 People P \par
+\tab\tab  \cf2 WHERE\cf0  P\cf3 .\cf0 playerID \cf3 =\cf0  S\cf3 .\cf0 playerID\par
+\par
+\cf2 SELECT\cf0  playerid\cf3 ,\cf0  \cf4 CONCAT\cf3 (\cf0 nameFirst\cf3 ,\cf0  \cf5 ' ( '\cf3 ,\cf0  nameGiven\cf3 ,\cf5 ' ) '\cf3 ,\cf0  nameLast\cf3 )\cf0  \cf2 AS\cf0  [Full Name]\cf3 ,\cf0\par
+[401K Total] \cf2 FROM\cf0  People\par
+\cf2 WHERE\cf0  playerID \cf3 in\cf2  \cf3 (\cf2 SELECT\cf0  playerID \cf2 FROM\cf0  Salaries \cf2 WHERE\cf0  [401K Contributions] \cf3 >\cf0  0\cf3 )\cf0\par
+\cf2 ORDER\cf0  \cf2 BY\cf0  playerid\par
+\par
+\par
+\cf1 -- Q18\cf0\par
+\cf1 -- \f3\u10625?\f1\lang9\tab As with any job, players are given raises each year, write a query that calculates the increase each player received and calculate the % increase that raise makes. You will only need to use the SALARIES  and PEOPLE tables. You answer should include the columns below. Include the players full name and sort your results by playerid in ascending order and year in descending order. This query returns 15,569 rows. You cannot use advanced aggregate functions such as LAG for this question. The answer can be written using only the SQL parameters you learned in this chapter.\cf0\par
+\par
+\cf2 Select\cf0  People\cf3 .\cf0 playerID\cf3 ,\cf0  \par
+\tab    namegiven \cf3 +\cf0  \cf5 ' ('\cf0  \cf3 +\cf0  namefirst \cf3 +\cf0  \cf5 ') '\cf0  \cf3 +\cf0  namelast \cf2 AS\cf0  [Full Name]\cf3 ,\cf0\par
+\tab    yearID\cf3 ,\cf0\par
+       \cf4 FORMAT\cf3 (\cf0 salary\cf3 ,\cf0  \cf5 'C'\cf3 )\cf0  \cf2 as\cf0  [Current Salary]\cf3 ,\cf0  \par
+\tab    \cf4 FORMAT\cf3 (\cf0 lag\cf3 (\cf0 salary\cf3 )\cf0   \cf2 over \cf3 (\cf2 partition\cf0  \cf2 by\cf0  Salaries\cf3 .\cf0 playerID \cf2 order\cf0  \cf2 by\cf0  yearID\cf3 ),\cf5 'C'\cf3 )\cf0  \cf2 AS\cf0  [Prior Salary]\cf3 ,\cf0\par
+       \cf4 FORMAT\cf3 (\cf0 salary \cf3 -\cf0  lag\cf3 (\cf0 salary\cf3 )\cf0  \cf2 over \cf3 (\cf2 partition\cf0  \cf2 by\cf0  Salaries\cf3 .\cf0 playerID \cf2 order\cf0  \cf2 by\cf0  yearID\cf3 ),\cf5 'C'\cf3 )\cf0  \cf2 AS\cf0  [Salary Difference]\cf3 ,\cf0\par
+\tab    \cf4 FORMAT\cf3 ((\cf0 salary \cf3 -\cf0  lag\cf3 (\cf0 salary\cf3 )\cf0  \cf2 over \cf3 (\cf2 partition\cf0  \cf2 by\cf0  Salaries\cf3 .\cf0 playerID \cf2 order\cf0  \cf2 by\cf0  Salaries\cf3 .\cf0 playerID\cf3 ))/\cf0 salary\cf3 ,\cf5 'P'\cf3 )\cf0\par
+\tab\tab\tab\cf2 AS\cf0  [Salary Increase]\par
+\cf2 from\cf0  Salaries\cf3 ,\cf0  People\par
+\cf2 WHERE\cf0  People\cf3 .\cf0 playerID \cf3 =\cf0  Salaries\cf3 .\cf0 playerID \cf3 AND\cf0  salary\cf3 >\cf0 0\par
+\cf2 ORDER\cf0  \cf2 BY\cf0  playerID\cf3 ,\cf0  yearID \cf2 DESC\par
+\cf0\par
+\par
+\par
+\b\f0\fs36\par
+}
+ 
